@@ -6,11 +6,23 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/03/30 23:03:07 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/04/01 21:16:01 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	free_nulltermchartab(char **tab)
+{
+	int i;
+
+	i = 0;
+	if (tab == NULL)
+		return ;
+	while (tab[i])
+		free(tab[i++]);
+	free(tab);
+}
 
 char *trim_char(char *string, char c)
 {
@@ -37,18 +49,22 @@ int line_id(char *line_descriptor)
 	int len;
 
 	len = ft_strlen(line_descriptor);
-	identifiers = ft_split("R NO SO WE EA S F C", ' ');
+	identifiers = ft_split(ID, ' ');
 	i = 0;
 	while (identifiers[i])
 	{
 		if (ft_strncmp(identifiers[i], line_descriptor, len) == 0)
+		{
+			free_nulltermchartab(identifiers);
 			return (i);
+		}
 		i++;
 	}
+	free_nulltermchartab(identifiers);
 	return (-1);
 }
 
-int get_color(char *RGB, t_mapinfo mapinfo, int line_id)
+/*int get_color(char *RGB, t_mapinfo mapinfo, int line_id)
 {
 	
 }
@@ -61,7 +77,7 @@ int get_resolution(char *XY, t_mapinfo mapinfo, int line_id)
 int get_pathname(char *pathname, t_mapinfo mapinfo, int line_id)
 {
 	
-}
+}*/
 
 t_mapinfo	getinfo(int fd)
 {
@@ -76,13 +92,10 @@ t_mapinfo	getinfo(int fd)
 		if(split_space_line[0] && line_id(split_space_line[0]) != -1)
 			printf("%s\n", readline);
 		i = 0;
-		while (split_space_line[i])
-		{
-			free(split_space_line[i]);
-			i++;
-		}
-		free(split_space_line);
+		free(readline);
+		free_nulltermchartab(split_space_line);
 	}
+	free(readline);
 	return (mapinfo);
 }
 /*
