@@ -29,7 +29,20 @@ int		exit_gnl(char **line)
 	*line = NULL;
 	return (-1);
 }
+     NO test 1
 
+       NO pathtosomewhere
+	NO
+
+
+  SO dsld;sld;s
+
+
+
+  dsdlskd    EA
+
+
+EA -----
 int		fill_next_line(char *source, char **line, char *save)
 {
 	char *temp;

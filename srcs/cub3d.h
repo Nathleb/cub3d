@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/03/28 18:08:36 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/03/29 00:51:24 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 64
 # endif
+# include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -46,10 +47,6 @@ typedef struct s_mapinfo
 	t_color C;
 }		t_mapinfo;
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char *s1, char *s2);
-size_t	ft_strlen(const char *s);
+char	*ft_strjoin_free(char *s1, char *s2);
 int		get_next_line(int fd, char **line);
-void	*ft_calloc(size_t nmemb, size_t size);
 #endif
