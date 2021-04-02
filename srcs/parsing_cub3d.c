@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/04/01 21:16:01 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/04/02 03:04:25 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,29 @@ void	free_nulltermchartab(char **tab)
 	free(tab);
 }
 
-char *trim_char(char *string, char c)
+char	*trim_char(char *string, char c)
 {
-	while(*string == c)
+	while (*string == c)
 		string++;
 	return (string);
 }
 
-int valid_mapfile(t_path mapfile)
+int		valid_mapfile(t_path mapfile)
 {
 	size_t len;
 
 	len = ft_strlen(mapfile);
-	if (len >= 4 && mapfile[len - 1] == 'b' && mapfile[len - 2] == 'u' 
+	if (len >= 4 && mapfile[len - 1] == 'b' && mapfile[len - 2] == 'u'
 			&& mapfile[len - 3] == 'c' && mapfile[len - 4] == '.')
 		return (1);
 	return (0);
 }
 
-int line_id(char *line_descriptor)
+int		getline_id(char *line_descriptor)
 {
-	char **identifiers;
-	int i;
-	int len;
+	char	**identifiers;
+	int		i;
+	int		len;
 
 	len = ft_strlen(line_descriptor);
 	identifiers = ft_split(ID, ' ');
@@ -64,34 +64,70 @@ int line_id(char *line_descriptor)
 	return (-1);
 }
 
-/*int get_color(char *RGB, t_mapinfo mapinfo, int line_id)
+int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 {
-	
+	char **colors;
+	int i;
+	int j;
+	int rgbvalue;
+
+	i = 0;
+	colors = ft_split(rgb, ',');
+	while (colors[i])
+		i++;
+	if (i != 3)
+		return (exitfunc);
+	i = 0;
+	while(i < 3)
+	{
+		j = 0;
+		while (colors[i][j])
+			if (ft_isdigit(colors[i][j++] == 0)
+					return (exitfunc);
+		rgbvalue = ft_atoi(colors[i])	
+		if (rgbvalue > 255 || rgbvalue < 0)
+			return (exifunc)
+		if (line_id == 6)
+			mapinfo.F[i] == rgbvalue; //rework les structures
+
+
+	}
+	return (1);
 }
 
-int get_resolution(char *XY, t_mapinfo mapinfo, int line_id)
-{
-	
+int		get_resolution(char *xy, t_mapinfo *mapinfo, int line_id)
+{	
+	printf("getresolution");
+	return (1);
 }
 
-int get_pathname(char *pathname, t_mapinfo mapinfo, int line_id)
+int		get_pathname(char *pathname, t_mapinfo *mapinfo, int line_id)
 {
-	
-}*/
+	printf("pathname");
+	return (1);
+}
+
 
 t_mapinfo	getinfo(int fd)
 {
 	char *readline;
 	char **split_space_line;
-	int i;
+	int id;
 	t_mapinfo mapinfo;
 
 	while(get_next_line(fd, &readline))
 	{
 		split_space_line = ft_split(readline, ' ');
-		if(split_space_line[0] && line_id(split_space_line[0]) != -1)
-			printf("%s\n", readline);
-		i = 0;
+		if (split_space_line[0] && 
+				(id = getline_id(split_space_line[0])) != -1)
+		{
+			if (id == 0)
+				get_resolution(split_space_line[1], &mapinfo, id);
+			else if (id > 5)
+				get_color(split_space_line[1], &mapinfo, id);
+			else
+				get_pathname(split_space_line[1], &mapinfo, id);
+		}	
 		free(readline);
 		free_nulltermchartab(split_space_line);
 	}
