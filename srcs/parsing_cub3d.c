@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/04/02 03:04:25 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/04/19 15:03:38 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,46 +64,89 @@ int		getline_id(char *line_descriptor)
 	return (-1);
 }
 
+int		error_get(char *errmessage)
+{
+	write(2, "Error\n", 6);
+	write(2, errmessage, ft_strlen(errmessage));
+	return (-1);
+}
+
 int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 {
 	char **colors;
 	int i;
-	int j;
-	int rgbvalue;
+	int rgbvalue[3];
+	int iserr;
 
 	i = 0;
+	iserr = 0;
 	colors = ft_split(rgb, ',');
 	while (colors[i])
 		i++;
 	if (i != 3)
-		return (exitfunc);
-	i = 0;
-	while(i < 3)
+		iserr = 1;
+	i = -1;
+	while(++i < 3 && iserr != 1)
 	{
-		j = 0;
-		while (colors[i][j])
-			if (ft_isdigit(colors[i][j++] == 0)
-					return (exitfunc);
-		rgbvalue = ft_atoi(colors[i])	
-		if (rgbvalue > 255 || rgbvalue < 0)
-			return (exifunc)
-		if (line_id == 6)
-			mapinfo.F[i] == rgbvalue; //rework les structures
-
-
+		rgbvalue[i] = ft_atoi(colors[i]);
+		if (!ft_strisdigit(colors[i]) || rgbvalue[i] > 255 || rgbvalue[i] < 0)
+			iserr = 1;
 	}
+	free_nulltermchartab(colors);
+	if (iserr)
+		return(error_get("Wrong color argument\n"));
+	if (line_id == 6)
+		mapinfo->F = rgbvalue;
+	if (line_id == 7)
+		mapinfo->C = rgbvalue;
 	return (1);
 }
 
-int		get_resolution(char *xy, t_mapinfo *mapinfo, int line_id)
+int		get_resolution(char *xy, t_mapinfo *mapinfo)
 {	
-	printf("getresolution");
+	char **xys;
+	int i;
+	int sizes[2];
+	int iserr;
+
+	i = 0;
+	iserr = 0;
+	xys = ft_split(rgb, ',');
+	while (xys[i])
+		i++;
+	if (i != 2)
+		iserr = 1;
+	i = -1;
+	while(++i < 2 && iserr != 1)
+	{
+		sizes[i] = ft_atoi(xys[i]);
+		if (!ft_strisdigit(xys[i]) || sizes[i] < 0)
+			iserr = 1;
+	}
+	free_nulltermchartab(xys);
+	if (iserr)
+		return(error_get("Wrong resolution argument\n"));
+	mapinfo->R = sizes;
 	return (1);
 }
 
 int		get_pathname(char *pathname, t_mapinfo *mapinfo, int line_id)
 {
-	printf("pathname");
+	int i;
+	int iserr;
+//faire une validation du path, voir apres.
+// bien regarder les free.
+	iserr = 0;
+	if (line_id == 1)
+		mapinfo->NO = pathname;
+	if (line_id == 2)
+		mapinfo->SO = pathname;
+	if (line_id == 3)
+		mapinfo->WE = pathname;
+	if (line_id == 4)
+		mapinfo->EA = pathname;
+	if (line_id == 5)
+		mapinfo->S = pathname;
 	return (1);
 }
 
@@ -121,12 +164,14 @@ t_mapinfo	getinfo(int fd)
 		if (split_space_line[0] && 
 				(id = getline_id(split_space_line[0])) != -1)
 		{
-			if (id == 0)
+			if (id == 0 && split_space_line[1])
 				get_resolution(split_space_line[1], &mapinfo, id);
-			else if (id > 5)
+			else if (id > 5 && split_space_line[1])
 				get_color(split_space_line[1], &mapinfo, id);
-			else
+			else if (split_space_line[1])
 				get_pathname(split_space_line[1], &mapinfo, id);
+			else
+				error_get("No value after identifier\n");
 		}	
 		free(readline);
 		free_nulltermchartab(split_space_line);
@@ -134,16 +179,6 @@ t_mapinfo	getinfo(int fd)
 	free(readline);
 	return (mapinfo);
 }
-/*
-int valid_texturefile(t_path texture)
-{
-
-}
-
-int valid_infos(s_mapinfo mapinfos)
-{
-
-}*/
 
 int main(int argc, char **argv)
 {
