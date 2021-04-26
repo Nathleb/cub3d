@@ -6,7 +6,7 @@
 #    By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/06 19:27:19 by nle-biha          #+#    #+#              #
-#    Updated: 2021/04/20 15:04:05 by nle-biha         ###   ########.fr        #
+#    Updated: 2021/04/26 15:33:29 by nle-biha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 NAME	=	cub3D
 CC		=	clang
 FLAGS	=	-O3 -Wall -Wextra -Werror
-SRCS	=	srcs/cub3d.c 
+SRCS	=	srcs/ft_strisdigit.c srcs/get_next_line_utils_bonus.c srcs/get_next_line_bonus.c srcs/parsing_cub3d.c
 INCS	=	$(addprefix includes/, cub3d.h)
 OBJS	=	$(SRCS:.c=.o)
 

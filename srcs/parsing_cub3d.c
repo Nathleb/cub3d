@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/04/19 15:03:38 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/04/26 16:20:53 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,28 +102,25 @@ int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 	return (1);
 }
 
-int		get_resolution(char *xy, t_mapinfo *mapinfo)
+int		get_resolution(char **xy, t_mapinfo *mapinfo)
 {	
-	char **xys;
 	int i;
 	int sizes[2];
 	int iserr;
 
 	i = 0;
 	iserr = 0;
-	xys = ft_split(rgb, ',');
-	while (xys[i])
+	while (xy[i])
 		i++;
-	if (i != 2)
+	if (i != 3)
 		iserr = 1;
 	i = -1;
 	while(++i < 2 && iserr != 1)
 	{
-		sizes[i] = ft_atoi(xys[i]);
-		if (!ft_strisdigit(xys[i]) || sizes[i] < 0)
+		sizes[i] = ft_atoi(xy[i + 1]);
+		if (!ft_strisdigit(xy[i + 1]) || sizes[i] < 0)
 			iserr = 1;
 	}
-	free_nulltermchartab(xys);
 	if (iserr)
 		return(error_get("Wrong resolution argument\n"));
 	mapinfo->R = sizes;
@@ -132,7 +129,6 @@ int		get_resolution(char *xy, t_mapinfo *mapinfo)
 
 int		get_pathname(char *pathname, t_mapinfo *mapinfo, int line_id)
 {
-	int i;
 	int iserr;
 //faire une validation du path, voir apres.
 // bien regarder les free.
@@ -165,7 +161,7 @@ t_mapinfo	getinfo(int fd)
 				(id = getline_id(split_space_line[0])) != -1)
 		{
 			if (id == 0 && split_space_line[1])
-				get_resolution(split_space_line[1], &mapinfo, id);
+				get_resolution(split_space_line, &mapinfo);
 			else if (id > 5 && split_space_line[1])
 				get_color(split_space_line[1], &mapinfo, id);
 			else if (split_space_line[1])
@@ -185,9 +181,12 @@ int main(int argc, char **argv)
 	int fd;
 	t_mapinfo mapinfo;
 
+	(void) argc;
 	if (!valid_mapfile(argv[1]))
+	{
 		printf("not valid");
-		//exit;
+		return (0);
+	}
 	fd = open(argv[1], O_RDONLY);
 	mapinfo = getinfo(fd);
 }
