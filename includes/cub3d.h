@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/04/26 16:03:08 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/04 19:01:35 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include "../mlx_linux/mlx.h"
-# define ID "R NO SO WE EA S F C"
+# define MAPCHAR "10NWES2 \n"
 typedef int *t_resolution;
 
 typedef int *t_color;
@@ -30,14 +30,16 @@ typedef char* t_path;
 
 typedef struct s_mapinfo
 {
-	t_resolution R;
-	t_path NO;
-	t_path SO;
-	t_path WE;
-	t_path EA;
-	t_path S;
-	t_color F;
-	t_color C;
+	t_resolution	R;
+	t_path			NO;
+	t_path			SO;
+	t_path			WE;
+	t_path			EA;
+	t_path			S;
+	t_color 		F;
+	t_color			C;
+	int				is_set[8];
+	char			**map;
 }		t_mapinfo;
 
 int		ft_strisdigit(const char *str);

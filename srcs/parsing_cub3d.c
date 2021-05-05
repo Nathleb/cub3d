@@ -6,11 +6,25 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/04/26 16:20:53 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/05 16:44:48 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int	allinfo_set(int *is_set)
+{
+	int i;
+
+	i = 0;
+	while(i < 8)
+	{
+		if (is_set[i] == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 void	free_nulltermchartab(char **tab)
 {
@@ -44,23 +58,18 @@ int		valid_mapfile(t_path mapfile)
 
 int		getline_id(char *line_descriptor)
 {
-	char	**identifiers;
-	int		i;
+int		i;
 	int		len;
+	char 	*id[9] = {"R","NO","SO","WE","EA","S","F","C", NULL};
 
 	len = ft_strlen(line_descriptor);
-	identifiers = ft_split(ID, ' ');
 	i = 0;
-	while (identifiers[i])
+	while (id[i])
 	{
-		if (ft_strncmp(identifiers[i], line_descriptor, len) == 0)
-		{
-			free_nulltermchartab(identifiers);
+		if (ft_strncmp(id[i], line_descriptor, len + 1) == 0)
 			return (i);
-		}
 		i++;
 	}
-	free_nulltermchartab(identifiers);
 	return (-1);
 }
 
@@ -80,8 +89,8 @@ int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 
 	i = 0;
 	iserr = 0;
-	colors = ft_split(rgb, ',');
-	while (colors[i])
+/**/colors = ft_split(rgb, ',');
+	while (colors && colors[i])
 		i++;
 	if (i != 3)
 		iserr = 1;
@@ -146,47 +155,101 @@ int		get_pathname(char *pathname, t_mapinfo *mapinfo, int line_id)
 	return (1);
 }
 
+int			build_map(char *line, t_mapinfo *mapinfo)
+{
+	int i;
+	int cur_nbrlines;
+	char **newmap;	
+	i = 0;
+	while(line[i])
+	{
+		if (ft_strchr(MAPCHAR, line[i]) == NULL)
+			return (error_get("BAD CHARACTER IN MAP"));
+		i++;
+	}
+	cur_nbrlines = 0;
+	while (mapinfo->map && mapinfo->map[cur_nbrlines])
+		cur_nbrlines++;
+/**/newmap = malloc((cur_nbrlines + 2) * sizeof(char*));
+	i = 0;
+	while (i < cur_nbrlines)
+	{
+		newmap[i] = mapinfo->map[i];
+		i++;
+	}
+	newmap[i] = line;
+	newmap[i + 1] = NULL;
+   	free(mapinfo->map);
+	mapinfo->map = newmap;
+	return (1);	
+}
 
-t_mapinfo	getinfo(int fd)
+int 		get_tocall(char **split_space_line, t_mapinfo *mapinfo, int id)
+{
+	if (mapinfo->is_set[id] == 0)
+	{
+		mapinfo->is_set[id] = 1;
+		if (id == 0)
+			return(get_resolution(split_space_line, mapinfo));
+		else if (id > 5)
+			return(get_color(split_space_line[1], mapinfo, id));
+		else
+			return(get_pathname(split_space_line[1], mapinfo, id));
+	}
+	else
+		return(error_get("Descriptor appears multiple times"));
+}
+
+t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 {
 	char *readline;
 	char **split_space_line;
 	int id;
-	t_mapinfo mapinfo;
+	int isnoterr;
 
-	while(get_next_line(fd, &readline))
+	isnoterr = 1;
+	while(get_next_line(fd, &readline) > -1 && isnoterr == 1)
 	{
-		split_space_line = ft_split(readline, ' ');
-		if (split_space_line[0] && 
-				(id = getline_id(split_space_line[0])) != -1)
+		if (allinfo_set(mapinfo->is_set))
+			isnoterr = build_map(readline, mapinfo);	
+		else
 		{
-			if (id == 0 && split_space_line[1])
-				get_resolution(split_space_line, &mapinfo);
-			else if (id > 5 && split_space_line[1])
-				get_color(split_space_line[1], &mapinfo, id);
-			else if (split_space_line[1])
-				get_pathname(split_space_line[1], &mapinfo, id);
-			else
-				error_get("No value after identifier\n");
-		}	
-		free(readline);
-		free_nulltermchartab(split_space_line);
+/**/		split_space_line = ft_split(readline, ' ');
+			if (split_space_line[0] && 
+					(id = getline_id(split_space_line[0])) != -1)
+			{
+				if (split_space_line[1])
+					isnoterr = get_tocall(split_space_line, mapinfo, id);
+				else
+					isnoterr = error_get("Not value after descriptor");
+			}
+			free_nulltermchartab(split_space_line);
+			free(readline);
+		}
 	}
-	free(readline);
-	return (mapinfo);
+	if (isnoterr == 1)
+		free(readline);
+	return (*mapinfo);
 }
 
 int main(int argc, char **argv)
 {
 	int fd;
-	t_mapinfo mapinfo;
+	int i;
 
-	(void) argc;
+	t_mapinfo mapinfo;
+	mapinfo.map = NULL;
+	i = 0;
+	while(i < 8)
+		mapinfo.is_set[i++] = 0;
+
+	if (argc != 1 && argc != 2)
+		return (error_get("Wrong number of arguments"));
 	if (!valid_mapfile(argv[1]))
-	{
-		printf("not valid");
-		return (0);
-	}
+		return (error_get("Not valid extension"));
 	fd = open(argv[1], O_RDONLY);
-	mapinfo = getinfo(fd);
+	mapinfo = getinfo(fd, &mapinfo);
+	i = 0;
+	while(mapinfo.map[i])
+		printf("%s\n",mapinfo.map[i++]);
 }
