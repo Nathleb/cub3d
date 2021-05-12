@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/10 15:30:36 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/12 16:26:15 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,13 @@ typedef struct s_mapinfo
 int		ft_strisdigit(const char *str);
 char	*ft_strjoin_free(char *s1, char *s2);
 int		get_next_line(int fd, char **line);
+int 	get_tocall(char **split_space_line, t_mapinfo *mapinfo, int id);
+int		get_pathname(char *pathname, t_mapinfo *mapinfo, int line_id);
+int		get_resolution(char **xy, t_mapinfo *mapinfo);
+int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id);
+int		build_map(char *line, t_mapinfo *mapinfo);
+int		flood_fill(char **visited, int line, int col);
+int 	is_validmap(t_mapinfo *mapinfo);
+void    free_nulltermchartab(char **tab);
+int     error_get(char *errmessage);
 #endif
