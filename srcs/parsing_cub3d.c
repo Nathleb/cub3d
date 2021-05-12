@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/05 16:44:48 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/12 16:04:43 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,22 +161,27 @@ int			build_map(char *line, t_mapinfo *mapinfo)
 	int cur_nbrlines;
 	char **newmap;	
 	i = 0;
+	cur_nbrlines = 0;
+	while (mapinfo->map && mapinfo->map[cur_nbrlines])
+		cur_nbrlines++;
 	while(line[i])
 	{
 		if (ft_strchr(MAPCHAR, line[i]) == NULL)
 			return (error_get("BAD CHARACTER IN MAP"));
-		i++;
+		if (ft_strchr("NSEW", line[i]))
+		{
+			if (mapinfo->starting_line != -1)
+				return (error_get("Multiple starting position"));
+			mapinfo->starting_col = i;
+			mapinfo->starting_line = cur_nbrlines;
+			mapinfo->starting_orientation = line[i];
+		}
+				i++;
 	}
-	cur_nbrlines = 0;
-	while (mapinfo->map && mapinfo->map[cur_nbrlines])
-		cur_nbrlines++;
 /**/newmap = malloc((cur_nbrlines + 2) * sizeof(char*));
-	i = 0;
-	while (i < cur_nbrlines)
-	{
+	i = -1;
+	while (++i < cur_nbrlines)
 		newmap[i] = mapinfo->map[i];
-		i++;
-	}
 	newmap[i] = line;
 	newmap[i + 1] = NULL;
    	free(mapinfo->map);
@@ -208,28 +213,71 @@ t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 	int isnoterr;
 
 	isnoterr = 1;
-	while(get_next_line(fd, &readline) > -1 && isnoterr == 1)
-	{
+	while(get_next_line(fd, &readline) && isnoterr == 1) {
 		if (allinfo_set(mapinfo->is_set))
 			isnoterr = build_map(readline, mapinfo);	
 		else
 		{
 /**/		split_space_line = ft_split(readline, ' ');
 			if (split_space_line[0] && 
-					(id = getline_id(split_space_line[0])) != -1)
-			{
-				if (split_space_line[1])
-					isnoterr = get_tocall(split_space_line, mapinfo, id);
-				else
-					isnoterr = error_get("Not value after descriptor");
-			}
+					(id = getline_id(split_space_line[0])) != -1 && split_space_line[1])
+				isnoterr = get_tocall(split_space_line, mapinfo, id);
+			else
+				isnoterr = error_get("Wrong descriptor or no value after descriptor");
 			free_nulltermchartab(split_space_line);
 			free(readline);
 		}
 	}
-	if (isnoterr == 1)
+	if (isnoterr == 0)
 		free(readline);
+	else
+		build_map(readline, mapinfo);
 	return (*mapinfo);
+}
+
+int	flood_fill(char **visited, int line, int col)
+{
+	int ret;
+	ret = 1;
+	visited[line][col] = 'V';
+	if (visited[line + 1][col] && visited[line - 1][col] && visited[line][col + 1] && visited[line][col - 1] && visited[line + 1][col] != ' ' && visited[line - 1][col] != ' ' && visited[line][col + 1] != ' ' && visited[line][col - 1] != ' ')
+	{
+		if (visited[line + 1][col] == '0' || visited[line + 1][col] == '2')
+				ret = flood_fill(visited, line + 1, col);
+		if ((visited[line - 1][col] == '0' || visited[line - 1][col] == 2) && ret == 1)
+				ret = flood_fill(visited, line - 1, col);
+		if ((visited[line][col + 1] == '0' || visited[line][col + 1] == '2') && ret == 1)
+				ret = flood_fill(visited, line, col + 1);
+		if ((visited[line][col - 1] == '0' || visited[line][col - 1] == '2') && ret == 1)
+				ret = flood_fill(visited, line, col - 1);
+	}
+	else
+		return (0);
+	return(ret);
+	
+}
+
+int is_validmap(t_mapinfo *mapinfo)
+{	
+	int i;
+	char **newmap;	
+	
+	i = 0;
+	while (mapinfo->map && mapinfo->map[i])
+		i++;
+/**/newmap = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (mapinfo->map && mapinfo->map[i])
+	{
+		newmap[i] = ft_strdup(mapinfo->map[i]);
+		i++;	
+	}
+	newmap[i] = NULL;
+	i = 0;
+	if (mapinfo->starting_line != -1)
+		i = flood_fill(newmap, mapinfo->starting_line, mapinfo->starting_col);
+	free_nulltermchartab(newmap);
+	return (i);
 }
 
 int main(int argc, char **argv)
@@ -242,7 +290,7 @@ int main(int argc, char **argv)
 	i = 0;
 	while(i < 8)
 		mapinfo.is_set[i++] = 0;
-
+	mapinfo.starting_line = -1;
 	if (argc != 1 && argc != 2)
 		return (error_get("Wrong number of arguments"));
 	if (!valid_mapfile(argv[1]))
@@ -250,6 +298,11 @@ int main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	mapinfo = getinfo(fd, &mapinfo);
 	i = 0;
-	while(mapinfo.map[i])
-		printf("%s\n",mapinfo.map[i++]);
+	while (mapinfo.map[i])
+	{
+		printf("%d : %s\n",i, mapinfo.map[i]);
+		i++;
+	}
+	if (!is_validmap(&mapinfo))
+		error_get("Invalid map");
 }

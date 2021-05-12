@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/04 19:01:35 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/10 15:30:36 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ typedef struct s_mapinfo
 	t_color			C;
 	int				is_set[8];
 	char			**map;
+	int				starting_line;
+	int				starting_col;
+	char			starting_orientation;
 }		t_mapinfo;
 
 int		ft_strisdigit(const char *str);
