@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 16:19:18 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/12 16:43:39 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,15 @@ int	allinfo_set(int *is_set)
 	return (1);
 }
 
-void	free_nulltermchartab(char **tab)
+void parsing_init(t_mapinfo *mapinfo)
 {
 	int i;
 
+	mapinfo->map = NULL;
 	i = 0;
-	if (tab == NULL)
-		return ;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
+	while(i < 8)
+		mapinfo->is_set[i++] = 0;
+	mapinfo->starting_line = -1;
 }
 
 int		valid_mapfile(t_path mapfile)
@@ -63,13 +62,6 @@ int		i;
 			return (i);
 		i++;
 	}
-	return (-1);
-}
-
-int		error_get(char *errmessage)
-{
-	write(2, "Error\n", 6);
-	write(2, errmessage, ft_strlen(errmessage));
 	return (-1);
 }
 
@@ -109,11 +101,7 @@ int main(int argc, char **argv)
 	int i;
 
 	t_mapinfo mapinfo;
-	mapinfo.map = NULL;
-	i = 0;
-	while(i < 8)
-		mapinfo.is_set[i++] = 0;
-	mapinfo.starting_line = -1;
+	parsing_init(&mapinfo);
 	if (argc != 1 && argc != 2)
 		return (error_get("Wrong number of arguments"));
 	if (!valid_mapfile(argv[1]))
