@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:12:46 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 16:17:44 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/12 18:08:02 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ int			build_map(char *line, t_mapinfo *mapinfo)
 	while(line[i])
 	{
 		if (ft_strchr(MAPCHAR, line[i]) == NULL)
-			return (error_get("BAD CHARACTER IN MAP"));
+			return (error_get("Bad character in map\n"));
 		if (ft_strchr("NSEW", line[i]))
 		{
 			if (mapinfo->starting_line != -1)
-				return (error_get("Multiple starting position"));
+				return (error_get("Multiple starting position\n"));
 			mapinfo->starting_col = i;
 			mapinfo->starting_line = cur_nbrlines;
 			mapinfo->starting_orientation = line[i];

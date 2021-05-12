@@ -6,18 +6,18 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 16:43:39 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/12 18:17:19 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	allinfo_set(int *is_set)
+int		allinfo_set(int *is_set)
 {
 	int i;
 
 	i = 0;
-	while(i < 8)
+	while (i < 8)
 	{
 		if (is_set[i] == 0)
 			return (0);
@@ -26,13 +26,13 @@ int	allinfo_set(int *is_set)
 	return (1);
 }
 
-void parsing_init(t_mapinfo *mapinfo)
+void	parsing_init(t_mapinfo *mapinfo)
 {
 	int i;
 
 	mapinfo->map = NULL;
 	i = 0;
-	while(i < 8)
+	while (i < 8)
 		mapinfo->is_set[i++] = 0;
 	mapinfo->starting_line = -1;
 }
@@ -50,30 +50,56 @@ int		valid_mapfile(t_path mapfile)
 
 int		getline_id(char *line_descriptor)
 {
-int		i;
 	int		len;
-	char 	*id[9] = {"R","NO","SO","WE","EA","S","F","C", NULL};
 
 	len = ft_strlen(line_descriptor);
+	if (ft_strncmp("R", line_descriptor, len + 1) == 0)
+		return (0);
+	if (ft_strncmp("NO", line_descriptor, len + 1) == 0)
+		return (1);
+	if (ft_strncmp("SO", line_descriptor, len + 1) == 0)
+		return (2);
+	if (ft_strncmp("WE", line_descriptor, len + 1) == 0)
+		return (3);
+	if (ft_strncmp("EA", line_descriptor, len + 1) == 0)
+		return (4);
+	if (ft_strncmp("S", line_descriptor, len + 1) == 0)
+		return (5);
+	if (ft_strncmp("F", line_descriptor, len + 1) == 0)
+		return (6);
+	if (ft_strncmp("C", line_descriptor, len + 1) == 0)
+		return (7);
+	return (-1);
+}
+
+/*int		getline_id(char *line_descriptor)
+{
+	int		i;
+	int		len;
+	char 	id[9][3] = {"R", "NO", "SO", "WE", "EA", "S", "F", "C"};
+	
+	len = ft_strlen(line_descriptor);
 	i = 0;
-	while (id[i])
+	while (i < 8)
 	{
 		if (ft_strncmp(id[i], line_descriptor, len + 1) == 0)
 			return (i);
 		i++;
 	}
 	return (-1);
-}
+}*/
 
 t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 {
-	char *readline;
-	char **split_space_line;
-	int id;
-	int isnoterr;
+	char	*readline;
+	char	**split_space_line;
+	int		id;
+	int		isnoterr;
 
 	isnoterr = 1;
-	while(get_next_line(fd, &readline) && isnoterr == 1) {
+	id = 0;
+	while (get_next_line(fd, &readline) && isnoterr == 1)
+	{
 		if (allinfo_set(mapinfo->is_set))
 			isnoterr = build_map(readline, mapinfo);	
 		else
@@ -83,7 +109,7 @@ t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 					(id = getline_id(split_space_line[0])) != -1 && split_space_line[1])
 				isnoterr = get_tocall(split_space_line, mapinfo, id);
 			else
-				isnoterr = error_get("Wrong descriptor or no value after descriptor");
+				isnoterr = error_get("Wrong descriptor or no value after descriptor\n");
 			free_nulltermchartab(split_space_line);
 			free(readline);
 		}
@@ -103,17 +129,17 @@ int main(int argc, char **argv)
 	t_mapinfo mapinfo;
 	parsing_init(&mapinfo);
 	if (argc != 1 && argc != 2)
-		return (error_get("Wrong number of arguments"));
+		return (error_get("Wrong number of arguments\n"));
 	if (!valid_mapfile(argv[1]))
-		return (error_get("Not valid extension"));
+		return (error_get("Not a valid extension\n"));
 	fd = open(argv[1], O_RDONLY);
-	mapinfo = getinfo(fd, &mapinfo);
 	i = 0;
+	mapinfo = getinfo(fd, &mapinfo);
 	while (mapinfo.map[i])
 	{
 		printf("%d : %s\n",i, mapinfo.map[i]);
 		i++;
 	}
 	if (!is_validmap(&mapinfo))
-		error_get("Invalid map");
+		error_get("Invalid map\n");
 }

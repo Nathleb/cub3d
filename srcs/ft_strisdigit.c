@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 18:11:29 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/04/26 16:02:22 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/12 17:15:20 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	ft_strisdigit(const char *str)
 
 	i = 0;
 	if (!str)
-		return(-1);
-	while(str[i])
+		return (0);
+	while (str[i])
 	{
 		if (ft_isdigit(str[i]) == 0)
 			return (0);
