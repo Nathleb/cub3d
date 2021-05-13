@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:09:13 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 13:25:06 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 13:58:04 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int		get_resolution(char **xy, t_mapinfo *mapinfo)
 	while (++i < 2 && iserr != 1)
 	{
 		sizes[i] = ft_atoi(xy[i + 1]);
-		if (!ft_strisdigit(xy[i + 1]) || sizes[i] < 0)
+		if (!ft_strisdigit(xy[i + 1]) || sizes[i] <= 0)
 			iserr = 1;
 	}
 	if (iserr)

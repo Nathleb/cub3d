@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 13:17:35 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 13:52:42 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int		getline_id(char *line_descriptor)
 	return (-1);
 }
 
-t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
+int		getinfo(int fd, t_mapinfo *mapinfo)
 {
 	char	*readline;
 	char	**split_space_line;
@@ -97,7 +97,7 @@ t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 		}
 	}
 	(isnoterr == 0) ? free(readline) : build_map(readline, mapinfo);
-	return (*mapinfo);
+	return (isnoterr);
 }
 
 int main(int argc, char **argv)
@@ -113,7 +113,8 @@ int main(int argc, char **argv)
 		return (error_get("Not a valid extension\n"));
 	fd = open(argv[1], O_RDONLY);
 	i = 0;
-	mapinfo = getinfo(fd, &mapinfo);
+	if (getinfo(fd, &mapinfo) == 0)
+		return (error_get("Exiting..."));
 	while (mapinfo.map[i])
 	{
 		printf("%d : %s\n",i, mapinfo.map[i]);
