@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 18:17:19 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 13:17:35 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,23 +72,6 @@ int		getline_id(char *line_descriptor)
 	return (-1);
 }
 
-/*int		getline_id(char *line_descriptor)
-{
-	int		i;
-	int		len;
-	char 	id[9][3] = {"R", "NO", "SO", "WE", "EA", "S", "F", "C"};
-	
-	len = ft_strlen(line_descriptor);
-	i = 0;
-	while (i < 8)
-	{
-		if (ft_strncmp(id[i], line_descriptor, len + 1) == 0)
-			return (i);
-		i++;
-	}
-	return (-1);
-}*/
-
 t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 {
 	char	*readline;
@@ -97,7 +80,6 @@ t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 	int		isnoterr;
 
 	isnoterr = 1;
-	id = 0;
 	while (get_next_line(fd, &readline) && isnoterr == 1)
 	{
 		if (allinfo_set(mapinfo->is_set))
@@ -114,10 +96,7 @@ t_mapinfo	getinfo(int fd, t_mapinfo *mapinfo)
 			free(readline);
 		}
 	}
-	if (isnoterr == 0)
-		free(readline);
-	else
-		build_map(readline, mapinfo);
+	(isnoterr == 0) ? free(readline) : build_map(readline, mapinfo);
 	return (*mapinfo);
 }
 

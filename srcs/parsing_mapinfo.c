@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:09:13 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 17:10:22 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 13:25:06 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,9 @@ int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 	if (i != 3)
 		iserr = 1;
 	i = -1;
-	while (++i < 3 && iserr != 1)
-	{
-		rgbvalue[i] = ft_atoi(colors[i]);
-		if (!ft_strisdigit(colors[i]) || rgbvalue[i] > 255 || rgbvalue[i] < 0)
+	while (++i < 3 && iserr != 1 && (rgbvalue[i] = ft_atoi(colors[i])) >= 0)
+		if (!ft_strisdigit(colors[i]) || rgbvalue[i] > 255)
 			iserr = 1;
-	}
 	free_nulltermchartab(colors);
 	if (iserr)
 		return (error_get("Wrong color argument\n"));

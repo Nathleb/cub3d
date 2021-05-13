@@ -6,21 +6,17 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:12:46 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 18:08:02 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 13:29:58 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int			build_map(char *line, t_mapinfo *mapinfo)
+int			is_validline(char *line, t_mapinfo *mapinfo, int cur_nbrlines)
 {
 	int i;
-	int cur_nbrlines;
-	char **newmap;
+
 	i = 0;
-	cur_nbrlines = 0;
-	while (mapinfo->map && mapinfo->map[cur_nbrlines])
-		cur_nbrlines++;
 	while(line[i])
 	{
 		if (ft_strchr(MAPCHAR, line[i]) == NULL)
@@ -33,8 +29,22 @@ int			build_map(char *line, t_mapinfo *mapinfo)
 			mapinfo->starting_line = cur_nbrlines;
 			mapinfo->starting_orientation = line[i];
 		}
-				i++;
+		i++;
 	}
+	return (1);
+}
+
+int			build_map(char *line, t_mapinfo *mapinfo)
+{
+	int i;
+	int cur_nbrlines;
+	char **newmap;
+	i = 0;
+	cur_nbrlines = 0;
+	while (mapinfo->map && mapinfo->map[cur_nbrlines])
+		cur_nbrlines++;
+	if (is_validline(line, mapinfo, cur_nbrlines) == 0)
+		return (0);
 /**/newmap = malloc((cur_nbrlines + 2) * sizeof(char*));
 	i = -1;
 	while (++i < cur_nbrlines)

@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:33:46 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 16:40:48 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 13:07:49 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,5 @@ int     error_get(char *errmessage)
 {   
     write(2, "Error\n", 6);
     write(2, errmessage, ft_strlen(errmessage));
-    return (-1);
+    return (0);
 }
-
