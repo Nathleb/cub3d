@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:01:47 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 13:52:42 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 15:58:06 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,52 +74,28 @@ int		getline_id(char *line_descriptor)
 
 int		getinfo(int fd, t_mapinfo *mapinfo)
 {
-	char	*readline;
+	char	*rl;
 	char	**split_space_line;
 	int		id;
-	int		isnoterr;
+	int		bo;
 
-	isnoterr = 1;
-	while (get_next_line(fd, &readline) && isnoterr == 1)
+	bo = 1;
+	while (get_next_line(fd, &rl) && bo == 1)
 	{
-		if (allinfo_set(mapinfo->is_set))
-			isnoterr = build_map(readline, mapinfo);	
+		if (allinfo_set(mapinfo->is_set) && (bo = build_map(rl, mapinfo)) >= 0)
+			continue;
+		split_space_line = ft_split(rl, ' ');
+		if (split_space_line[0] &&
+	(id = getline_id(split_space_line[0])) != -1 && split_space_line[1])
+			bo = get_tocall(split_space_line, mapinfo, id);
 		else
-		{
-/**/		split_space_line = ft_split(readline, ' ');
-			if (split_space_line[0] && 
-					(id = getline_id(split_space_line[0])) != -1 && split_space_line[1])
-				isnoterr = get_tocall(split_space_line, mapinfo, id);
-			else
-				isnoterr = error_get("Wrong descriptor or no value after descriptor\n");
-			free_nulltermchartab(split_space_line);
-			free(readline);
-		}
+			bo = error_get("Wrong descriptor or no value\n");
+		free_nulltermchartab(split_space_line);
+		free(rl);
 	}
-	(isnoterr == 0) ? free(readline) : build_map(readline, mapinfo);
-	return (isnoterr);
-}
-
-int main(int argc, char **argv)
-{
-	int fd;
-	int i;
-
-	t_mapinfo mapinfo;
-	parsing_init(&mapinfo);
-	if (argc != 1 && argc != 2)
-		return (error_get("Wrong number of arguments\n"));
-	if (!valid_mapfile(argv[1]))
-		return (error_get("Not a valid extension\n"));
-	fd = open(argv[1], O_RDONLY);
-	i = 0;
-	if (getinfo(fd, &mapinfo) == 0)
-		return (error_get("Exiting..."));
-	while (mapinfo.map[i])
-	{
-		printf("%d : %s\n",i, mapinfo.map[i]);
-		i++;
-	}
-	if (!is_validmap(&mapinfo))
-		error_get("Invalid map\n");
+	if (bo == 0)
+		free(rl);
+	else
+		build_map(rl, mapinfo);
+	return (bo);
 }

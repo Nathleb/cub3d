@@ -6,18 +6,18 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:12:46 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 13:29:58 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 15:47:31 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int			is_validline(char *line, t_mapinfo *mapinfo, int cur_nbrlines)
+int		is_validline(char *line, t_mapinfo *mapinfo, int cur_nbrlines)
 {
 	int i;
 
 	i = 0;
-	while(line[i])
+	while (line[i])
 	{
 		if (ft_strchr(MAPCHAR, line[i]) == NULL)
 			return (error_get("Bad character in map\n"));
@@ -34,58 +34,66 @@ int			is_validline(char *line, t_mapinfo *mapinfo, int cur_nbrlines)
 	return (1);
 }
 
-int			build_map(char *line, t_mapinfo *mapinfo)
+int		build_map(char *line, t_mapinfo *mapinfo)
 {
-	int i;
-	int cur_nbrlines;
-	char **newmap;
+	int		i;
+	int		cur_nbrlines;
+	char	**newmap;
+
 	i = 0;
 	cur_nbrlines = 0;
 	while (mapinfo->map && mapinfo->map[cur_nbrlines])
 		cur_nbrlines++;
 	if (is_validline(line, mapinfo, cur_nbrlines) == 0)
 		return (0);
-/**/newmap = malloc((cur_nbrlines + 2) * sizeof(char*));
+	newmap = malloc((cur_nbrlines + 2) * sizeof(char*));
 	i = -1;
 	while (++i < cur_nbrlines)
 		newmap[i] = mapinfo->map[i];
 	newmap[i] = line;
 	newmap[i + 1] = NULL;
-   	free(mapinfo->map);
+	free(mapinfo->map);
 	mapinfo->map = newmap;
 	return (1);
 }
-int	flood_fill(char **visited, int line, int col)
+
+int		flood_fill(char **map, int line, int col)
 {
 	int ret;
+
 	ret = 1;
-	visited[line][col] = 'V';
-	if (visited[line + 1][col] && visited[line - 1][col] && visited[line][col + 1] && visited[line][col - 1] && visited[line + 1][col] != ' ' && visited[line - 1][col] != ' ' && visited[line][col + 1] != ' ' && visited[line][col - 1] != ' ')
+	map[line][col] = 'V';
+	if (map[line + 1][col] && map[line - 1][col] && map[line][col + 1] &&
+	map[line][col - 1] && map[line + 1][col] != ' ' &&
+	map[line - 1][col] != ' ' &&
+	map[line][col + 1] != ' ' && map[line][col - 1] != ' ')
 	{
-		if (visited[line + 1][col] == '0' || visited[line + 1][col] == '2')
-				ret = flood_fill(visited, line + 1, col);
-		if ((visited[line - 1][col] == '0' || visited[line - 1][col] == 2) && ret == 1)
-				ret = flood_fill(visited, line - 1, col);
-		if ((visited[line][col + 1] == '0' || visited[line][col + 1] == '2') && ret == 1)
-				ret = flood_fill(visited, line, col + 1);
-		if ((visited[line][col - 1] == '0' || visited[line][col - 1] == '2') && ret == 1)
-				ret = flood_fill(visited, line, col - 1);
+		if (map[line + 1][col] == '0' || map[line + 1][col] == '2')
+			ret = flood_fill(map, line + 1, col);
+		if ((map[line - 1][col] == '0' || map[line - 1][col] == 2)
+				&& ret == 1)
+			ret = flood_fill(map, line - 1, col);
+		if ((map[line][col + 1] == '0' || map[line][col + 1] == '2')
+				&& ret == 1)
+			ret = flood_fill(map, line, col + 1);
+		if ((map[line][col - 1] == '0' || map[line][col - 1] == '2')
+				&& ret == 1)
+			ret = flood_fill(map, line, col - 1);
 	}
 	else
 		return (0);
-	return(ret);
-
+	return (ret);
 }
 
-int is_validmap(t_mapinfo *mapinfo)
+int		is_validmap(t_mapinfo *mapinfo)
 {
-	int i;
-	char **newmap;
+	int		i;
+	char	**newmap;
 
 	i = 0;
 	while (mapinfo->map && mapinfo->map[i])
 		i++;
-/**/newmap = malloc(sizeof(char *) * (i + 1));
+	newmap = malloc(sizeof(char *) * (i + 1));
 	i = 0;
 	while (mapinfo->map && mapinfo->map[i])
 	{

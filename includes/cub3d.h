@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/12 16:26:15 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 15:59:08 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,7 @@ int		flood_fill(char **visited, int line, int col);
 int 	is_validmap(t_mapinfo *mapinfo);
 void    free_nulltermchartab(char **tab);
 int     error_get(char *errmessage);
+int		getinfo(int fd, t_mapinfo *mapinfo);
+int		valid_mapfile(t_path mapfile);
+void	parsing_init(t_mapinfo *mapinfo);
 #endif

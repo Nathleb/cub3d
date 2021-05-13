@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:09:13 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 13:58:04 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/13 15:56:48 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 
 	i = 0;
 	iserr = 0;
-/**/colors = ft_split(rgb, ',');
+	colors = ft_split(rgb, ',');
 	while (colors && colors[i])
 		i++;
 	if (i != 3)
