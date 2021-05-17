@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/17 14:17:33 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/17 17:54:45 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@ typedef int *t_resolution;
 typedef int *t_color;
 
 typedef char* t_path;
+
+typedef struct s_player
+{
+	double posX;
+	double posY;
+	double dirX;
+	double dirY;
+	double planeX;
+	double planeY;
+}				t_player;
 
 typedef struct s_mapinfo
 {
