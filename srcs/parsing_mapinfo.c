@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/12 16:09:13 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 15:56:48 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/17 17:31:04 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 {
 	char	**colors;
 	int		i;
-	int		rgbvalue[3];
+	int		*rgbvalue;
 	int		iserr;
 
 	i = 0;
 	iserr = 0;
 	colors = ft_split(rgb, ',');
+	rgbvalue = malloc(3 * sizeof(int));
 	while (colors && colors[i])
 		i++;
 	if (i != 3)
@@ -43,11 +44,12 @@ int		get_color(char *rgb, t_mapinfo *mapinfo, int line_id)
 int		get_resolution(char **xy, t_mapinfo *mapinfo)
 {
 	int i;
-	int sizes[2];
+	int *sizes;
 	int iserr;
 
 	i = 0;
 	iserr = 0;
+	sizes = malloc(2 * sizeof(int));
 	while (xy[i])
 		i++;
 	if (i != 3)
@@ -70,16 +72,17 @@ int		get_pathname(char *pathname, t_mapinfo *mapinfo, int line_id)
 	int iserr;
 
 	iserr = 0;
+
 	if (line_id == 1)
-		mapinfo->NO = pathname;
+		mapinfo->NO = ft_strdup(pathname);
 	if (line_id == 2)
-		mapinfo->SO = pathname;
+		mapinfo->SO = ft_strdup(pathname);
 	if (line_id == 3)
-		mapinfo->WE = pathname;
+		mapinfo->WE = ft_strdup(pathname);
 	if (line_id == 4)
-		mapinfo->EA = pathname;
+		mapinfo->EA = ft_strdup(pathname);
 	if (line_id == 5)
-		mapinfo->S = pathname;
+		mapinfo->S = ft_strdup(pathname);
 	return (1);
 }
 

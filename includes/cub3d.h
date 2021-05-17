@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 21:04:38 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 15:59:08 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/17 14:17:33 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,19 @@ typedef struct s_mapinfo
 	char			starting_orientation;
 }		t_mapinfo;
 
+typedef struct	s_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_data;
+
+typedef struct	s_vars {
+	void	*mlx;
+	void	*win;
+}				t_vars;
+
 int		ft_strisdigit(const char *str);
 char	*ft_strjoin_free(char *s1, char *s2);
 int		get_next_line(int fd, char **line);
@@ -60,4 +73,6 @@ int     error_get(char *errmessage);
 int		getinfo(int fd, t_mapinfo *mapinfo);
 int		valid_mapfile(t_path mapfile);
 void	parsing_init(t_mapinfo *mapinfo);
+void    startgame(t_mapinfo mapinfo);
+
 #endif

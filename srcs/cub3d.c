@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 15:57:07 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/13 15:57:45 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/17 17:28:59 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,24 @@ int 	main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	i = 0;
 	if (getinfo(fd, &mapinfo) == 0)
-		return (error_get("Exiting..."));
-	while (mapinfo.map[i])
 	{
-		printf("%d : %s\n",i, mapinfo.map[i]);
-		i++;
+		free_nulltermchartab(mapinfo.map);
+		return (error_get("Exiting...\n"));
 	}
 	if (!is_validmap(&mapinfo))
-		error_get("Invalid map\n");
+	{
+		free_nulltermchartab(mapinfo.map);
+		return (error_get("Invalid map\nExiting...\n"));
+	}
+	free_nulltermchartab(mapinfo.map);
+	printf("%d %d\n", mapinfo.R[0],mapinfo.R[1]);
+	printf("%s \n",mapinfo.NO);
+	printf("%s \n",mapinfo.SO);
+	printf("%s \n",mapinfo.WE);
+	printf("%s \n",mapinfo.EA);
+	printf("%s \n",mapinfo.S);
+	printf("%d %d %d \n", mapinfo.F[0],mapinfo.F[1],mapinfo.F[2]);
+	printf("%d %d %d \n", mapinfo.C[0],mapinfo.C[1],mapinfo.C[2]);
+	//startgame(mapinfo);
 }
 
