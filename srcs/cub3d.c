@@ -6,7 +6,7 @@
 /*   By: nle-biha <nle-biha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 15:57:07 by nle-biha          #+#    #+#             */
-/*   Updated: 2021/05/17 23:20:20 by nle-biha         ###   ########.fr       */
+/*   Updated: 2021/05/18 23:07:13 by nle-biha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,5 @@ int 	main(int argc, char **argv)
 	printf("%d %d %d \n", mapinfo.C[0],mapinfo.C[1],mapinfo.C[2]);
 	printf("%d %d\n", mapinfo.starting_line, mapinfo.starting_col);
 	printf("%c \n",mapinfo.starting_orientation);
-//	startgame(mapinfo);
+	startgame(mapinfo);
 }
